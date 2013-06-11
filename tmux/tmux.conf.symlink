@@ -36,6 +36,9 @@ bind -r J resize-pane -D 5
 bind -r K resize-pane -U 5
 bind -r L resize-pane -R 5
 
+# Toggle maximize pane
+bind -r o resize-pane -Z
+
 # Enable mouse entirely
 set-option -g mouse-select-pane on
 set-option -g mouse-select-window on
