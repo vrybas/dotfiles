@@ -9,15 +9,32 @@
 [credential]
         helper = osxkeychain
 [alias]
+        st = status
+        lpc = log -p -c
+        lc = log
+        lco = log --pretty=oneline --decorate
+        lx = log --graph --pretty=format:'%s - %Cred%h%Creset  %Cgreen(%cr)%Creset %an' --abbrev-commit --date=relative --all
+        lst = log --stat
         co = checkout
-        promote = !$ZSH/bin/git-promote
-        wtf     = !$ZSH/bin/git-wtf
-        rank-contributers = !$ZSH/bin/git-rank-contributers
+        dfc = diff
+        ai = add -i
+        c = commit
+        m = commit -m
+        a = add
+        b = branch
+        showrel = name-rev --name-only
+        igndb = update-index --assume-unchanged config/database.yml
+        igngitign = update-index --assume-unchanged .gitignore
+        cldb = checkout config/database.yml
+        promote = !$ZSHDOT/bin/git-promote
+        wtf     = !$ZSHDOT/bin/git-wtf
+        rank-contributers = !$ZSHDOT/bin/git-rank-contributers
         count   = !git shortlog -sn
 [color]
         diff = auto
         status = auto
         branch = auto
+        interactive = auto
         ui = true
 [core]
         excludesfile = ~/.gitignore
@@ -36,3 +53,12 @@
         #
         # Setting to git 2.0 default to surpress warning message
         default = simple
+
+[rerere]
+  enabled = 1
+
+[web]
+  browser = chrome
+
+[browser "chrome"]
+  cmd = /usr/bin/google-chrome
