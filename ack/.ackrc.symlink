@@ -1,0 +1,4 @@
+-a
+--flush
+--ignore-dir=.rsync_cache
+--ignore-dir=.idea
