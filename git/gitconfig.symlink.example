@@ -62,3 +62,6 @@
 
 [browser "chrome"]
   cmd = /usr/bin/google-chrome
+
+[init]
+  templatedir = ~/.git_template
