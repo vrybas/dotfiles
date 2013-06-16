@@ -1,3 +1,7 @@
+# Bind prefix to C-i
+unbind C-b
+set -g prefix C-i
+
 # Change send command delay
 set -sg escape-time 1
 
