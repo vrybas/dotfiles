@@ -1,0 +1,54 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'main'
+require 'talks'
+
+MINUTE = 60
+
+class Timer
+  class << self
+    def start!(minutes, &draw)
+      minutes_left = minutes
+
+      while minutes_left > 0 do
+        draw.call(minutes_left) if block_given?
+        minutes_left -= 1
+        sleep MINUTE
+      end
+    end
+  end
+end
+
+Main {
+  def run
+    while true
+      rules.each do |rule|
+        puts rule[:title]
+
+        Timer.start!(rule[:minutes]) do |minutes_left|
+          timer_report minutes_left
+        end
+      end
+    end
+  end
+
+  def rules
+    [{ title: "Let's work", minutes: 25 },
+     { title: "Let's rest", minutes: 5 }] * 4 +
+    [{ title: "Let's walk for 15 minutes", minutes: 15 }]
+  end
+
+  def say(text)
+    puts text
+    Talks.say text
+  end
+
+  def timer_report(minutes_left)
+    say minutes_left
+
+    File.open(File.expand_path('~/.pomo_stat'), 'w') do |f|
+      f.write("#{minutes_left} minutes left")
+    end
+  end
+}
