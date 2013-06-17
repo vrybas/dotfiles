@@ -1,6 +1,6 @@
 # Bind prefix to C-i
 unbind C-b
-set -g prefix C-i
+set-option -g prefix 'C-space'
 
 # Change send command delay
 set -sg escape-time 1
