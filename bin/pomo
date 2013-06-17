@@ -41,7 +41,7 @@ Main {
 
   def say(text)
     puts text
-    Talks.say text
+    #Talks.say text
   end
 
   def timer_report(minutes_left)
