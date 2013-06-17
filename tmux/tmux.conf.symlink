@@ -12,8 +12,8 @@ setw -g pane-base-index 1
 # Bind r to reload config file
 bind r source-file ~/.tmux.conf \; display "Config file reloaded"
 
-# Allow send C-a by pressing it twice
-bind C-a send-prefix
+unbind q
+bind-key q choose-session
 
 # Bind spliting panes by | and -
 bind v split-window -h
