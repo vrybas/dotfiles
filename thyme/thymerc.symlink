@@ -1,1 +1,6 @@
 set :tmux, true
+
+after do
+  `terminal-notifier -title "Thyme is up" -message " "`
+end
+
