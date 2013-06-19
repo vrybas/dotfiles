@@ -15,9 +15,6 @@
 set -e
 
 PULL_ARGS="$@"
-
-# when invoked as git-reup, run as `git pull --rebase'
-test "$(basename $0)" = "git-reup" &&
 PULL_ARGS="--rebase $PULL_ARGS"
 
 git pull $PULL_ARGS
