@@ -1,5 +1,14 @@
 # holman does dotfiles, so do I
 
+## Installation
+```sh
+git clone https://github.com/vrybas/dotfiles.git ~/.dotfiles
+cd ~/.dotfiles
+script/bootstrap
+```
+
+### Original @holman's readme:
+
 ## dotfiles
 
 Your dotfiles are how you personalize your system. These are mine.
