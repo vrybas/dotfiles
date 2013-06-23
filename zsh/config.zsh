@@ -43,3 +43,4 @@ bindkey '^?' backward-delete-char
 
 export PATH=/usr/local/bin:$PATH
 export LANG=en_US.UTF-8
+export EDITOR=vim
