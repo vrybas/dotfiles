@@ -1,4 +1,15 @@
--a
---flush
 --ignore-dir=.rsync_cache
 --ignore-dir=.idea
+--ignore-dir=doc
+--flush
+--type-add=ruby=.haml,.jbuilder
+--type-add=objc=.pch
+--type-set=xcode=.pbxproj,.pbxuser,.perspectivev3
+--type-set=ragel=.rl
+--type-set=nib=.xib
+--type-set=plist=.plist
+--type-set=tmstuff=.tmproj,.tm_build_errors
+--nonib
+--notmstuff
+--noxcode
+--nojs
