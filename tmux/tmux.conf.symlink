@@ -45,6 +45,9 @@ set-option -g mouse-select-pane on
 set-option -g mouse-select-window on
 set-window-option -g mode-mouse on
 
+# scrollback buffer size increase
+ set -g history-limit 500000
+
 # Enable pbcopy and pbpaste support in OSX
 #
 # Futher information:
