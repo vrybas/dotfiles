@@ -82,7 +82,7 @@ set -g default-terminal "screen-256color"
 setw -g utf8 on
 set -g status-utf8 on
 
-set-option -g status-right '#(cat ~/.thyme-tmux | sed "s/\:[0-9]*//" ) | #(date "+%I:%M")'
+set-option -g status-right '◉ #(cat ~/.thyme-tmux | sed "s/\:[0-9]*//" ) | #(date +"%R %e %b")'
 set-option -g status-interval 1
 
 set -g status-fg colour10
