@@ -10,11 +10,13 @@ ___________
 
 ## Warning ##
 
-If you're not on OSX, you should comment out
-`set -g default-command "reattach-to-user-namespace -l zsh"`
-otherwise tmux won't start.
+If you're not on OSX, you should comment out the line below, otherwise tmux won't start:
 
-If you're on OSX, install this script via Homebrew
+`set -g default-command "reattach-to-user-namespace -l zsh"`
+
+
+If you're on OSX, install this script via Homebrew:
+
 `> brew install reatach-to-user-namespace`
 
 ## Keymap (some standard mappings changed) ##
@@ -45,15 +47,15 @@ no prefix
 ### Copy-mode
 
 PREFIX + ...
-* `Esc` - enter copy mode
+* `Esc` - enter copy-mode
 
-no prefix
+inside copy-mode
 * `h/j/k/l` - move left/down/up/right
 * `v` - begin selection
 * `y` - copy selection
 
 PREFIX + ...
-* `p` - paste copied buffer
+* `p` - paste copied selection
 
 ### Other
 * `q` - switch between sessions
