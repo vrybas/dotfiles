@@ -28,8 +28,8 @@ bind -n C-\ run "(tmux display-message -p '#{pane_current_command}' | grep -iq v
 
 # Bind h and l to moving from window to window
 bind -r t select-window -t :-
-bind -r C-h select-window -t :-
-bind -r C-l select-window -t :+
+bind -r h select-window -t :-
+bind -r l select-window -t :+
 
 # Bind HJKL to resize panes
 bind -r H resize-pane -L 5
