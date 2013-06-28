@@ -9,13 +9,22 @@
 [credential]
         helper = osxkeychain
 [alias]
+        sh  = show
+        co  = commit
+        br  = branch
+        di  = diff
+        dic = diff --cached
+        rp  = remote prune origin
+        pr  = pull --rebase
+        p   = push
+        l   = log --pretty=format:"%h%x09%an%x09%ad%x09%s"
         st = status
         lpc = log -p -c
         lc = log
         lco = log --pretty=oneline --decorate
         lx = log --graph --pretty=format:'%s - %Cred%h%Creset  %Cgreen(%cr)%Creset %an' --abbrev-commit --date=relative --all
         lst = log --stat
-        co = checkout
+        ch = checkout
         dfc = diff
         ai = add -i
         c = commit
