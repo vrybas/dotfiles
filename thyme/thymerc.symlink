@@ -1,6 +1,12 @@
 set :tmux, true
 
+before do
+  `osascript ~/.dotfiles/bin/applescripts/breaktimereset.applescript`
+  `osascript ~/.dotfiles/bin/applescripts/tomatostart.applescript`
+end
+
 after do
   `terminal-notifier -title "Thyme is up" -message " "`
+  `osascript ~/.dotfiles/bin/applescripts/tomatoshow.applescript`
 end
 
