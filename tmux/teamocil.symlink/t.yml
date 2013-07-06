@@ -1,0 +1,20 @@
+session:
+  name: t
+  windows:
+  - name: vim
+    panes:
+      - cmd: "vim ."
+        height: 70
+      - cmd: "clear"
+        height: 30
+  - name: git
+    layout: even-horizontal
+    panes:
+      - cmd: ["clear","git-wtf"]
+      - cmd: ["clear","git diff"]
+  - name: console1
+    panes:
+      - cmd: "clear"
+  - name: console2
+    panes:
+      - cmd: "clear"

@@ -1,3 +1,3 @@
 alias tm='tmux'
-alias t='teamocil'
+alias tt='teamocil --here t'
 
