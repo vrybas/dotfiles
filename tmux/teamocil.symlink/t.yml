@@ -10,7 +10,7 @@ session:
   - name: git
     layout: even-horizontal
     panes:
-      - cmd: ["clear","git-wtf"]
+      - cmd: ["clear","git fetch","git-wtf"]
       - cmd: ["clear","git diff"]
   - name: console1
     panes:
