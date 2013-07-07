@@ -17,4 +17,4 @@ session:
       - cmd: "clear"
   - name: console2
     panes:
-      - cmd: "clear"
+      - cmd: ["clear","tmux select-window -t :1"]
