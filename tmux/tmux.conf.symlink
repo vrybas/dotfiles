@@ -1,4 +1,4 @@
-# Bind prefix to C-i
+# Bind prefix to C-space
 unbind C-b
 set-option -g prefix 'C-space'
 
