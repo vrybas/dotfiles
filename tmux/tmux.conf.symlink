@@ -82,6 +82,10 @@ set -g default-terminal "screen-256color"
 setw -g utf8 on
 set -g status-utf8 on
 
+set -g status-left-length 20
+set -g status-left '#S@#(hostname)'
+set -g window-status-format '#I:#W'
+set -g window-status-current-format '[#I:#W]'
 set-option -g status-right '◉ #(cat ~/.thyme-tmux | sed "s/\:[0-9]*//" ) | #(date +"%R | %e %b")'
 set-option -g status-interval 1
 
