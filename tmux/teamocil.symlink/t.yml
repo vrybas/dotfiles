@@ -12,9 +12,9 @@ session:
     panes:
       - cmd: ["clear","git fetch","git-wtf"]
       - cmd: ["clear","git diff"]
-  - name: console1
+  - name: maintenance
     panes:
       - cmd: "clear"
-  - name: console2
+  - name: shell
     panes:
       - cmd: ["clear","tmux select-window -t :1"]
