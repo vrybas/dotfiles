@@ -27,7 +27,6 @@ bind -n C-l run "(tmux display-message -p '#{pane_current_command}' | grep -iq v
 bind -n C-\ run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys 'C-\\') || tmux select-pane -l"
 
 # Bind h and l to moving from window to window
-bind -r t select-window -t :-
 bind -r h select-window -t :-
 bind -r l select-window -t :+
 
