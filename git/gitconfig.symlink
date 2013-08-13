@@ -67,7 +67,7 @@
   enabled = 1
 
 [web]
-  browser = chrome
+	browser = open
 
 [browser "chrome"]
   cmd = /usr/bin/google-chrome
