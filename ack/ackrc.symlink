@@ -2,7 +2,7 @@
 --ignore-dir=.idea
 --ignore-dir=doc
 --flush
---type-add=ruby=.haml,.jbuilder
+--type-add=ruby=.haml,.jbuilder,.feature
 --type-add=objc=.pch
 --type-set=xcode=.pbxproj,.pbxuser,.perspectivev3
 --type-set=ragel=.rl
