@@ -1,5 +1,6 @@
 --ignore-dir=.rsync_cache
 --ignore-dir=.idea
+--ignore-dir=npusher
 --ignore-dir=doc
 --flush
 --ignore-case
