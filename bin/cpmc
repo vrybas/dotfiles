@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo "Copying Mental Case Database..."
+cp -f /Users/vrybas/Dropbox/Apps/MentalCase/Library.mentalcase2lib/Data.sqlite /Users/vrybas/Library/Containers/com.mentalfaculty.mentalcase.mac/Data/Library/Application\ Support/Mental\ Case/Library.mentalcase2lib/Data.sqlite
+echo "done"
