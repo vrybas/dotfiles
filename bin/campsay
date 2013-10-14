@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+require 'broach'
+
+Broach.settings = {
+  'account' => 'domain',
+  'token'   => 'auth1orizat0ntoKen',
+  'use_ssl' => true
+}
+
+msg = ARGV[0]
+puts msg
+if room = Broach::Room.find(123456)
+  room.speak msg
+end
