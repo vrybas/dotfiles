@@ -11,5 +11,5 @@ Broach.settings = {
 msg = ARGV[0]
 puts msg
 if room = Broach::Room.find(123456)
-  room.speak msg
+  room.paste msg
 end
