@@ -2,7 +2,6 @@
 --ignore-dir=.idea
 --ignore-dir=npusher
 --ignore-dir=doc
---ignore-dir=.gems
 --flush
 --ignore-case
 --type-add=ruby=.haml,.jbuilder,.feature
