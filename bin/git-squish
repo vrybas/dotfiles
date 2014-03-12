@@ -1,0 +1,13 @@
+#!/bin/sh
+# Usage: git-squish 3
+#
+# Combines(rebase --interactive) last N commits on current branch
+
+if [[ $1 ]]
+then
+  n_commits=$1
+else
+  n_commits=2
+fi
+
+git rebase --interactive HEAD~$n_commits
