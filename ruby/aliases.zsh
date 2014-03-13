@@ -7,3 +7,7 @@ alias sd='script/destroy'
 alias migrate='rake db:migrate db:test:clone'
 
 alias v='vagrant'
+
+alias cuke='bundle exec cucumber --tags @active'
+alias cukes='bundle exec cucumber'
+alias specs='bundle exec rspec spec/'
