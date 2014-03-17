@@ -4,7 +4,6 @@
 --ignore-dir=doc
 --ignore-dir=.gems
 --flush
---ignore-case
 --type-add=ruby=.haml,.jbuilder,.feature
 --type-add=objc=.pch
 --type-set=xcode=.pbxproj,.pbxuser,.perspectivev3
@@ -15,4 +14,5 @@
 --nonib
 --notmstuff
 --noxcode
+--ignore-file=is:tags
 #--nojs
