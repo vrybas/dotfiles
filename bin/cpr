@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+
+# Usage: cpr 1007
+#
+# Checkout pull request branch with hub
+#
+# Created by @vrybas:
+
+pull_number = ARGV[0]
+origin_url = `git config --get remote.origin.url`
+repo_path = origin_url.scan(/:(\w+\/\w+).git/).flatten.first
+pull_request_url = "https://github.com/#{repo_path}/pull/#{pull_number}"
+
+`hub checkout #{pull_request_url}`
