@@ -9,5 +9,5 @@ alias migrate='rake db:migrate db:test:clone'
 alias v='vagrant'
 
 alias cuke='bundle exec cucumber --tags @active  --format progress'
-alias cukes='bundle exec cucumber --format progress'
+alias cukes='bundle exec cucumber --format progress --require features'
 alias specs='bundle exec rspec spec/'
