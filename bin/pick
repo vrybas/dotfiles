@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# Usage: pick
+#
+# 1. Creates `cherry-pick` branch from current branch
+# 2. Saves `git log -p` to a file
+# 3. Switches back to current branch
+# 4. Opens `git log -p` file in vim
+# 5. Now, in another shell, you can `git reset --hard` current branch
+#    and cherry-pick some commits, lookng at the log in a file.
+
+
+
+
+
+
+
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+git branch -D cherry-pick
+git checkout -b cherry-pick
+git log -p -100 > cherry-pick.diff
+git checkout $current_branch
+vim cherry-pick.diff
+
+
+
+
