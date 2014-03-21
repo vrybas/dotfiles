@@ -8,7 +8,7 @@
 
 pull_number = ARGV[0]
 origin_url = `git config --get remote.origin.url`
-repo_path = origin_url.scan(/:(\w+\/\w+).git/).flatten.first
+repo_path = origin_url.scan(/([\w\-_]+\/\w+).git/).flatten.first
 pull_request_url = "https://github.com/#{repo_path}/pull/#{pull_number}"
 
-`hub checkout #{pull_request_url}`
+`git fetch origin && hub checkout #{pull_request_url}`
