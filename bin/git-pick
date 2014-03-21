@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Usage: pick
+# Usage: git pick
 #
 # 1. Creates `cherry-pick` branch from current branch
 # 2. Saves `git log -p` to a file

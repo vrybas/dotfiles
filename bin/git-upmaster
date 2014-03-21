@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# Usage: gsync
+# Usage: git upmaster
 #
-# Sync current branch with master
+# Fetch master & merge current branch with master
 
 current_branch=$(git rev-parse --abbrev-ref HEAD)
 

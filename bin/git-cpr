@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-# Usage: cpr 1007
+# Usage: git cpr 1007
 #
 # Checkout pull request branch with hub
 #
