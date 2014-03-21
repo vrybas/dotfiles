@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# Usage: investigate
+#
+# 1. Creates `investigate` branch from current branch
+# 2. Saves `git log` to a file
+# 3. Opens `git log` file in vim
+# 4. Now, in another shell, you can `git reset --hard` current branch
+#    till the things work.
+
+git branch -D investigate
+git checkout -b investigate
+git log --stat -100 > .git/diff.diff
+vim investigate.diff
+
+
+
+
