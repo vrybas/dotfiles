@@ -1,5 +1,5 @@
 #!/bin/sh
-# Usage: git-squish 3
+# Usage: git-squash 3
 #
 # Combines(rebase --interactive) last N commits on current branch
 
