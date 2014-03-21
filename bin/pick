@@ -13,7 +13,7 @@ current_branch=$(git rev-parse --abbrev-ref HEAD)
 
 git branch -D cherry-pick
 git checkout -b cherry-pick
-git log -p -100 > cherry-pick.diff
+git log -p -100 > .git/diff.diff
 git checkout $current_branch
 vim cherry-pick.diff
 
