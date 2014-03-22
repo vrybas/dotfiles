@@ -1,7 +1,13 @@
 #!/bin/sh
-# Usage: git-squash 3
+# Usage: git squash 3
 #
-# Combines(rebase --interactive) last N commits on current branch
+# Combines(git rebase --interactive) last N commits on current branch
+# WARNING: It stashes changes before doing a rebase
+# (stashing part was taken from @Vonsild [script][1]
+#
+# [1]: https://github.com/Vonsild/Git-switch
+
+
 
 if [[ $1 ]]
 then
@@ -10,4 +16,30 @@ else
   n_commits=2
 fi
 
+#Get the name of the current branch
+CURRENT_BRANCH=$(git symbolic-ref --short -q HEAD)
+
+#If we currently are in a branch, then stash changes
+if [ $CURRENT_BRANCH != "" ]; then
+	#Check if there are local changes, before attempting to stash
+	MODIFIED=$(git status -s | grep ^\ M)
+	if [ "$MODIFIED" != "" ]; then
+    echo "Local changes stashed!"
+		git stash save "SWITCH-$CURRENT_BRANCH" > /dev/null
+	else
+		echo "No local changes to stash"
+	fi
+fi
+
 git rebase --interactive HEAD~$n_commits
+
+#Get the id of the last switch stash for other branch
+STASH=$(git stash list | grep "SWITCH-$CURRENT_BRANCH" | sed s/\}:.*/\}/)
+#If stash id was found, apply and drop it
+if [ "$STASH" != "" ]; then
+	echo "Applying $STASH to $CURRENT_BRANCH"
+	git stash apply $STASH > /dev/null
+	git stash drop $STASH > /dev/null
+else
+	echo "No Switch-stash found for $CURRENT_BRANCH"
+fi
