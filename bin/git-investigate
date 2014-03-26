@@ -8,10 +8,12 @@
 # 4. Now, in another shell, you can `git reset --hard` current branch
 #    till the things work.
 
+out_file=.git/diff.diff
+
 git branch -D investigate
 git checkout -b investigate
-git log --stat -100 > .git/diff.diff
-vim investigate.diff
+git log --stat -100 > $out_file
+vim $out_file
 
 
 

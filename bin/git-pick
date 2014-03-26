@@ -10,12 +10,13 @@
 #    and cherry-pick some commits, lookng at the log in a file.
 
 current_branch=$(git rev-parse --abbrev-ref HEAD)
+out_file=.git/diff.diff
 
 git branch -D cherry-pick
 git checkout -b cherry-pick
-git log -p -100 > .git/diff.diff
+git log -p -100 > $out_file
 git checkout $current_branch
-vim cherry-pick.diff
+vim $out_file
 
 
 
