@@ -16,7 +16,7 @@ git branch -D cherry-pick
 git checkout -b cherry-pick
 git log -p -100 > $out_file
 git checkout $current_branch
-vim $out_file
+vim "+set ft=git" $out_file
 
 
 

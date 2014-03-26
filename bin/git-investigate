@@ -13,7 +13,7 @@ out_file=.git/diff.diff
 git branch -D investigate
 git checkout -b investigate
 git log --stat -100 > $out_file
-vim $out_file
+vim "+set ft=git" $out_file
 
 
 
