@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+#
+# Usage: git pget patch URL
+# Get PATCH or DIFF of Commit or Pull Request by URL
+#
+# Configuration:
+# $ git config --global github.token YOUR_AUTH_TOKEN
+
+content_type = ARGV[0]
+content_url = ARGV[1]
+auth_token = `git config --global github.token`
+
+api_url = content_url.gsub("github.com","api.github.com/repos")
+                     .gsub("commit","commits")
+                     .gsub("pull","pulls")
+
+content = `curl -sS -u #{auth_token.strip}:x-oauth-basic -H "Accept: application/vnd.github.v3.#{content_type}" -L "#{api_url}"`
+puts content
