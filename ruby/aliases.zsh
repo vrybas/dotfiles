@@ -7,7 +7,8 @@ alias dbundle='BUNDLE_GEMFILE=.Gemfile bundle'
 
 alias cuke='bundle exec spring cucumber --tags @active'
 alias cukes='bundle exec spring cucumber --format progress --require features/'
-alias specs='bundle exec spring rspec'
+alias spec='bundle exec spring rspec'
+alias specd='bundle exec spring rspec --format=documentation'
 
 alias server='bundle exec spring rails server'
 alias console='bundle exec spring rails console'
