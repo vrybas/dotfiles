@@ -1,0 +1,7 @@
+#!/bin/sh
+#
+# Removes branches merged to current branch.
+#
+# Useful for cleaning up local branches, which are merged to `master`
+
+git branch --merged | grep -v "\*" | xargs -n 1 git branch -d
