@@ -1,0 +1,23 @@
+session:
+  name: s
+  windows:
+  - name: spec
+    panes:
+      - cmd: "clear"
+  - name: console
+    panes:
+      - cmd: "clear"
+  - name: server
+    panes:
+      - cmd: "clear"
+  - name: git
+    layout: even-horizontal
+    panes:
+      - cmd: ["clear","git fetch","git-wtf"]
+      - cmd: ["clear","git diff"]
+  - name: maintenance
+    panes:
+      - cmd: "clear"
+  - name: shell
+    panes:
+      - cmd: ["clear","tmux select-window -t :1"]
