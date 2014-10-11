@@ -1,5 +1,5 @@
 session:
-  name: v
+  name: editor
   windows:
   - name: vim-1
     panes:
