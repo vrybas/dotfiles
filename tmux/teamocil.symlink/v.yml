@@ -1,9 +1,0 @@
-session:
-  name: editor
-  windows:
-  - name: vim-1
-    panes:
-      - cmd: ["clear","vim ."]
-  - name: vim-2
-    panes:
-      - cmd: ["clear","tmux select-window -t :1"]
