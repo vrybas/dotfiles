@@ -4,8 +4,10 @@
 --ignore-dir=doc
 --ignore-dir=log
 --ignore-dir=.gems
+--ignore-dir=.bundle
 --flush
 --type-add=ruby=.haml,.jbuilder,.feature
+--type-add=css=.css,.scss,.sass
 --type-add=objc=.pch
 --type-set=xcode=.pbxproj,.pbxuser,.perspectivev3
 --type-set=ragel=.rl
