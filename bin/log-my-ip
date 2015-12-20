@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+require 'net/http'
+require 'json'
+
+ip   = Net::HTTP.get(URI("https://api.ipify.org"))
+data = JSON.parse(Net::HTTP.get(URI("http://ip-api.com/json/#{ip}")))
+
+File.open(File.join(ENV['HOME'],'my_public_ip.log'), "a") do |io|
+  io << "TIME: #{Time.now}\n"
+  io << "IP: #{ip}\n"
+  io << "ISP: #{data["isp"]}\n"
+  io << "COUNTRY: #{data["country"]}\n"
+  io << "\n\n"
+end
+
+
