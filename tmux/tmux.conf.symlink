@@ -86,6 +86,3 @@ set -g status-left '#S@#(hostname)'
 set -g window-status-format '#I:#W'
 set -g window-status-current-format '[#I:#W]'
 set-option -g status-interval 0
-
-set -g status-fg colour10
-set -g status-bg colour7
