@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<root>
+  <item>
+    <name>VRYBAS Custom Mappings</name>
+    <item>
+      <name>VRYBAS Symbols</name>
+      <appendix>Symbols</appendix>
+      <identifier vk_config="true">notsave.vrybas_symbols</identifier>
+      <autogen>__KeyToKey__ KeyCode::Q, KeyCode::KEY_8, ModifierFlag::SHIFT_L</autogen>
+      <autogen>__KeyToKey__ KeyCode::W, KeyCode::MINUS</autogen>
+      <autogen>__KeyToKey__ KeyCode::E, KeyCode::KEY_2, ModifierFlag::SHIFT_L</autogen>
+      <autogen>__KeyToKey__ KeyCode::R, KeyCode::EQUAL </autogen>
+      <autogen>__KeyToKey__ KeyCode::T, KeyCode::BACKSLASH, ModifierFlag::SHIFT_L</autogen>
+
+      <autogen>__KeyToKey__ KeyCode::A, KeyCode::KEY_3, ModifierFlag::SHIFT_L </autogen>
+      <autogen>__KeyToKey__ KeyCode::S, KeyCode::BRACKET_LEFT, ModifierFlag::SHIFT_L</autogen>
+      <autogen>__KeyToKey__ KeyCode::D, KeyCode::BRACKET_RIGHT, ModifierFlag::SHIFT_L</autogen>
+      <autogen>__KeyToKey__ KeyCode::F, KeyCode::BRACKET_LEFT</autogen>
+      <autogen>__KeyToKey__ KeyCode::G, KeyCode::BRACKET_RIGHT</autogen>
+
+      <autogen>__KeyToKey__ KeyCode::Z, KeyCode::KEY_4, ModifierFlag::SHIFT_L</autogen>
+      <autogen>__KeyToKey__ KeyCode::X, KeyCode::KEY_5, ModifierFlag::SHIFT_L</autogen>
+      <autogen>__KeyToKey__ KeyCode::C, KeyCode::KEY_9, ModifierFlag::SHIFT_L</autogen>
+      <autogen>__KeyToKey__ KeyCode::V, KeyCode::KEY_0, ModifierFlag::SHIFT_L</autogen>
+      <autogen>__KeyToKey__ KeyCode::B, KeyCode::KEY_7, ModifierFlag::SHIFT_L</autogen>
+
+      <autogen>__KeyToKey__ KeyCode::SPACE, KeyCode::MINUS, ModifierFlag::SHIFT_L</autogen>
+    </item>
+    <item>
+      <name>Hold MODIFIER+qwertasdfgzxcvb; to *-@=|#{}[]$%()&</name>
+      <identifier>remap.vrybas_modifier_to_symbols</identifier>
+      <autogen>__KeyOverlaidModifier__ KeyCode::OPTION_R, KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_vrybas_symbols</autogen>
+    </item>
+    <item>
+      <name>VRYBAS Numbers</name>
+      <appendix>Numbers</appendix>
+      <identifier vk_config="true">notsave.vrybas_numbers</identifier>
+      <autogen>__KeyToKey__ KeyCode::W, KeyCode::KEY_1</autogen>
+      <autogen>__KeyToKey__ KeyCode::E, KeyCode::KEY_2</autogen>
+      <autogen>__KeyToKey__ KeyCode::R, KeyCode::KEY_3</autogen>
+      <autogen>__KeyToKey__ KeyCode::T, KeyCode::KEY_4</autogen>
+
+      <autogen>__KeyToKey__ KeyCode::S, KeyCode::KEY_5</autogen>
+      <autogen>__KeyToKey__ KeyCode::D, KeyCode::KEY_6</autogen>
+      <autogen>__KeyToKey__ KeyCode::F, KeyCode::KEY_7</autogen>
+      <autogen>__KeyToKey__ KeyCode::G, KeyCode::KEY_8</autogen>
+
+      <autogen>__KeyToKey__ KeyCode::C, KeyCode::KEY_9</autogen>
+      <autogen>__KeyToKey__ KeyCode::V, KeyCode::KEY_0</autogen>
+
+    </item>
+    <item>
+      <name>Hold MODIFIER+wertsdfgcv; to 1234567890</name>
+      <identifier>remap.vrybas_modifier_to_numbers</identifier>
+      <autogen>__KeyOverlaidModifier__ KeyCode::SHIFT_R, KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_vrybas_numbers</autogen>
+    </item>
+  </item>
+</root>
