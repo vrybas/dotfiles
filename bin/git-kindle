@@ -37,10 +37,11 @@ def create_style_def
       preproc b;
       string;
       number;
-      symbol;
-      function;
-      cbracket;
+      symbol b;
+      function b;
+      cbracket b;
       lineno;
+      usertype b;
     STYLE
   end
 end
