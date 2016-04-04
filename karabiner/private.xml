@@ -24,7 +24,7 @@
       <autogen>__KeyToKey__ KeyCode::V, KeyCode::KEY_0, ModifierFlag::SHIFT_L</autogen>
       <autogen>__KeyToKey__ KeyCode::B, KeyCode::KEY_7, ModifierFlag::SHIFT_L</autogen>
 
-      <autogen>__KeyToKey__ KeyCode::SPACE, KeyCode::MINUS, ModifierFlag::SHIFT_L</autogen>
+      <autogen>__KeyToKey__ KeyCode::COMMAND_L, KeyCode::MINUS, ModifierFlag::SHIFT_L</autogen>
     </item>
     <item>
       <name>Hold MODIFIER+qwertasdfgzxcvb; to *-@=|#{}[]$%()&</name>
