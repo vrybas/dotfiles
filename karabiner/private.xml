@@ -6,17 +6,17 @@
       <name>VRYBAS Symbols</name>
       <appendix>Symbols</appendix>
       <identifier vk_config="true">notsave.vrybas_symbols</identifier>
-      <autogen>__KeyToKey__ KeyCode::Q, KeyCode::KEY_8, ModifierFlag::SHIFT_L</autogen>
-      <autogen>__KeyToKey__ KeyCode::W, KeyCode::MINUS</autogen>
+      <autogen>__KeyToKey__ KeyCode::Q, KeyCode::BACKQUOTE</autogen>
+      <autogen>__KeyToKey__ KeyCode::W, KeyCode::KEY_1, ModifierFlag::SHIFT_L</autogen>
       <autogen>__KeyToKey__ KeyCode::E, KeyCode::KEY_2, ModifierFlag::SHIFT_L</autogen>
       <autogen>__KeyToKey__ KeyCode::R, KeyCode::EQUAL </autogen>
-      <autogen>__KeyToKey__ KeyCode::T, KeyCode::BACKSLASH, ModifierFlag::SHIFT_L</autogen>
+      <autogen>__KeyToKey__ KeyCode::T, KeyCode::KEY_8, ModifierFlag::SHIFT_L</autogen>
 
-      <autogen>__KeyToKey__ KeyCode::A, KeyCode::KEY_3, ModifierFlag::SHIFT_L </autogen>
-      <autogen>__KeyToKey__ KeyCode::S, KeyCode::BRACKET_LEFT, ModifierFlag::SHIFT_L</autogen>
-      <autogen>__KeyToKey__ KeyCode::D, KeyCode::BRACKET_RIGHT, ModifierFlag::SHIFT_L</autogen>
-      <autogen>__KeyToKey__ KeyCode::F, KeyCode::BRACKET_LEFT</autogen>
-      <autogen>__KeyToKey__ KeyCode::G, KeyCode::BRACKET_RIGHT</autogen>
+      <autogen>__KeyToKey__ KeyCode::A, KeyCode::KEY_3, ModifierFlag::SHIFT_L</autogen>
+      <autogen>__KeyToKey__ KeyCode::S, KeyCode::MINUS</autogen>
+      <autogen>__KeyToKey__ KeyCode::D, KeyCode::BRACKET_LEFT</autogen>
+      <autogen>__KeyToKey__ KeyCode::F, KeyCode::BRACKET_RIGHT</autogen>
+      <autogen>__KeyToKey__ KeyCode::G, KeyCode::BACKSLASH, ModifierFlag::SHIFT_L</autogen>
       <autogen>__KeyToKey__ KeyCode::H, KeyCode::CURSOR_LEFT</autogen>
       <autogen>__KeyToKey__ KeyCode::J, KeyCode::CURSOR_DOWN</autogen>
       <autogen>__KeyToKey__ KeyCode::K, KeyCode::CURSOR_UP</autogen>
