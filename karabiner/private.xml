@@ -13,10 +13,10 @@
       <autogen>__KeyToKey__ KeyCode::T, KeyCode::KEY_8, ModifierFlag::SHIFT_L</autogen>
 
       <autogen>__KeyToKey__ KeyCode::A, KeyCode::KEY_3, ModifierFlag::SHIFT_L</autogen>
-      <autogen>__KeyToKey__ KeyCode::S, KeyCode::MINUS</autogen>
+      <autogen>__KeyToKey__ KeyCode::S, KeyCode::BACKSLASH, ModifierFlag::SHIFT_L</autogen>
       <autogen>__KeyToKey__ KeyCode::D, KeyCode::BRACKET_LEFT</autogen>
       <autogen>__KeyToKey__ KeyCode::F, KeyCode::BRACKET_RIGHT</autogen>
-      <autogen>__KeyToKey__ KeyCode::G, KeyCode::BACKSLASH, ModifierFlag::SHIFT_L</autogen>
+      <autogen>__KeyToKey__ KeyCode::G, KeyCode::MINUS</autogen>
       <autogen>__KeyToKey__ KeyCode::H, KeyCode::CURSOR_LEFT</autogen>
       <autogen>__KeyToKey__ KeyCode::J, KeyCode::CURSOR_DOWN</autogen>
       <autogen>__KeyToKey__ KeyCode::K, KeyCode::CURSOR_UP</autogen>
