@@ -1,8 +1,8 @@
 {
-    "label": "CURRENT",
+    "label": "VRYBAS",
     "author": "Vladimir Rybas",
-    "moreInfoUrl": "https://en.wikipedia.org/wiki/QWERTY",
-    "moreInfoText": "Wikipedia Entry",
+    "moreInfoUrl": "",
+    "moreInfoText": "",
     "fingerStart": {
         "1": 29,
         "2": 30,
