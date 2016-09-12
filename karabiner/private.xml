@@ -35,29 +35,38 @@
       <name>Hold MODIFIER+qwertasdfgzxcvb; to *-@=|#{}[]$%()&</name>
       <identifier>remap.vrybas_modifier_to_symbols</identifier>
       <autogen>__KeyOverlaidModifier__ KeyCode::OPTION_R, KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_vrybas_symbols</autogen>
+    </item>
+    <item>
+      <name>Microsoft Keyboard: Hold MODIFIER+qwertasdfgzxcvb; to *-@=|#{}[]$%()</name>
+      <identifier>remap.vrybas_modifier_to_symbols_ms</identifier>
       <autogen>__KeyOverlaidModifier__ KeyCode::PC_APPLICATION, KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_vrybas_symbols</autogen>
     </item>
     <item>
       <name>VRYBAS Numbers</name>
       <appendix>Numbers</appendix>
       <identifier vk_config="true">notsave.vrybas_numbers</identifier>
-      <autogen>__KeyToKey__ KeyCode::W, KeyCode::KEY_1</autogen>
-      <autogen>__KeyToKey__ KeyCode::E, KeyCode::KEY_2</autogen>
-      <autogen>__KeyToKey__ KeyCode::R, KeyCode::KEY_3</autogen>
-      <autogen>__KeyToKey__ KeyCode::T, KeyCode::KEY_4</autogen>
+      <autogen>__KeyToKey__ KeyCode::W, KeyCode::KEY_7</autogen>
+      <autogen>__KeyToKey__ KeyCode::E, KeyCode::KEY_8</autogen>
+      <autogen>__KeyToKey__ KeyCode::R, KeyCode::KEY_9</autogen>
 
-      <autogen>__KeyToKey__ KeyCode::S, KeyCode::KEY_5</autogen>
-      <autogen>__KeyToKey__ KeyCode::D, KeyCode::KEY_6</autogen>
-      <autogen>__KeyToKey__ KeyCode::F, KeyCode::KEY_7</autogen>
-      <autogen>__KeyToKey__ KeyCode::G, KeyCode::KEY_8</autogen>
+      <autogen>__KeyToKey__ KeyCode::S, KeyCode::KEY_4</autogen>
+      <autogen>__KeyToKey__ KeyCode::D, KeyCode::KEY_5</autogen>
+      <autogen>__KeyToKey__ KeyCode::F, KeyCode::KEY_6</autogen>
 
-      <autogen>__KeyToKey__ KeyCode::C, KeyCode::KEY_9</autogen>
-      <autogen>__KeyToKey__ KeyCode::V, KeyCode::KEY_0</autogen>
+      <autogen>__KeyToKey__ KeyCode::X, KeyCode::KEY_1</autogen>
+      <autogen>__KeyToKey__ KeyCode::C, KeyCode::KEY_2</autogen>
+      <autogen>__KeyToKey__ KeyCode::V, KeyCode::KEY_3</autogen>
+      <autogen>__KeyToKey__ KeyCode::B, KeyCode::KEY_0</autogen>
     </item>
     <item>
       <name>Hold MODIFIER+wertsdfgcv; to 1234567890</name>
       <identifier>remap.vrybas_modifier_to_numbers</identifier>
       <autogen>__KeyOverlaidModifier__ KeyCode::SHIFT_R, KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_vrybas_numbers</autogen>
     </item>
+  </item>
+  <item>
+    <name>VRYBAS CONTROL_R to PageDn</name>
+    <identifier>private.control_r_to_pagedn</identifier>
+    <autogen>__KeyToKey__ KeyCode::CONTROL_R, KeyCode::PAGEDOWN</autogen>
   </item>
 </root>
