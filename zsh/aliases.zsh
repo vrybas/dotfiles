@@ -3,4 +3,3 @@ alias utc="ruby -e 'puts Time.now.utc'"
 alias l="clear"
 alias x="exit"
 alias i="imgur2"
-
