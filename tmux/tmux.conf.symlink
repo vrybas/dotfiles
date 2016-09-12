@@ -86,3 +86,6 @@ set -g status-left '#S@#(hostname)'
 set -g window-status-format '#I:#W'
 set -g window-status-current-format '[#I:#W]'
 set-option -g status-interval 0
+
+# Pipe cursor fix in Vim
+set -g -a terminal-overrides ',*:Ss=\E[%p1%d q:Se=\E[2 q'
