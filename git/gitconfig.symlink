@@ -48,7 +48,7 @@
         interactive = auto
         ui = true
 [core]
-        excludesfile = ~/.gitignore
+        excludrsfile = /Users/vrybas/.gitignore_global
         editor = vim
 [apply]
         whitespace = nowarn
@@ -79,3 +79,6 @@
 
 [github]
   user = vrybas
+	token = 72fa95cbc86196f9402d283b05aa2eb93821f27b
+[todo]
+	md = /Users/vrybas/.gitignore_global
