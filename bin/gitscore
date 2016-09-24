@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+# Logs git score
+#
+# Example:
+#
+#   gitscore torvalds
+#   cat ~/gitscore.log
+
+echo "$(date) ~ $(curl http://www.gitscore.com/user/$1/calculate)" >> ~/gitscore.log
+exit 0
