@@ -17,7 +17,7 @@ If you're not on OSX, you should comment out the line below, otherwise tmux won'
 
 If you're on OSX, install this script via Homebrew:
 
-`> brew install reatach-to-user-namespace`
+`> brew install reattach-to-user-namespace`
 
 ## Keymap (some standard mappings changed) ##
 
