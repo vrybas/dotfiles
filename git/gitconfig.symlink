@@ -40,7 +40,8 @@
         promote = !$ZSHDOT/bin/git-promote
         wtf     = !$ZSHDOT/bin/git-wtf
         rank-contributers = !$ZSHDOT/bin/git-rank-contributers
-        count   = !git shortlog -sn
+        count   = shortlog -sn
+        commend = commit --amend --no-edit
 [color]
         diff = auto
         status = auto
