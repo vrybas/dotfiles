@@ -40,9 +40,7 @@ bind -r L resize-pane -R 5
 bind -r o resize-pane -Z
 
 # Disable mouse entirely
-set-option -g mouse-select-pane off
-set-option -g mouse-select-window off
-set-window-option -g mode-mouse off
+set-option -g mouse off
 
 # scrollback buffer size increase
  set -g history-limit 500000
@@ -71,15 +69,11 @@ unbind [
 bind Escape copy-mode
 unbind p
 bind p paste-buffer
-bind-key -t vi-copy 'v' begin-selection
-bind-key -t vi-copy 'y' copy-selection
+bind-key -T copy-mode-vi v send-keys -X begin-selection
+bind-key -T copy-mode-vi y send-keys -X copy-selection
 
 # Use 256 colors for proper displaying of Vim colorschemes
 set -g default-terminal "screen-256color"
-
-# Enable utf-8
-setw -g utf8 on
-set -g status-utf8 on
 
 set -g status-left-length 20
 set -g status-left '#S@#(hostname)'
