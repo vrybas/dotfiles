@@ -1,0 +1,7 @@
+#!/bin/sh
+#
+
+if [ ! -z "$1" ];
+then
+  echo "$(date -u +"%Y-%m-%d %H:%M:%S UTC") | $1" >> ~/current_status.log
+fi

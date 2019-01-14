@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require 'faker'
+
+puts "#{Faker::Name.first_name}-#{Faker::Name.initials}#{Faker::Number.number(3)}".downcase

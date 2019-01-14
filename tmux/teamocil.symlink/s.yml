@@ -1,4 +1,7 @@
 windows:
+- name: ed
+  panes:
+    - commands: ["clear"]
 - name: spec
   panes:
     - commands: ["clear"]
@@ -12,18 +15,15 @@ windows:
   layout: even-horizontal
   panes:
     - commands: ["clear","git fetch","git-wtf"]
-- name: mtce
+- name: deploy
   panes:
     - commands: ["clear"]
-- name: sh
+- name: mtce
   panes:
     - commands: ["clear","tmux select-window -t :1"]
 - name: sh
   panes:
     - commands: ["clear","tmux select-window -t :1"]
 - name: sh
-  panes:
-    - commands: ["clear","tmux select-window -t :1"]
-- name: rem
   panes:
     - commands: ["clear","tmux select-window -t :1"]

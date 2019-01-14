@@ -9,7 +9,7 @@ on run {input, parameters}
   end if
 
   if funcName equal to "utcd"
-    set funcResult to do shell script "ruby -e \"puts '!' << Time.now.utc.strftime('%Y-%m-%d')\""
+    set funcResult to do shell script "ruby -e \"puts '#' << Time.now.utc.strftime('%Y-%m-%d')\""
   end if
 
   if funcName equal to "utcn"
@@ -17,7 +17,7 @@ on run {input, parameters}
   end if
 
   if funcName equal to "hash"
-    set funcResult to do shell script "ruby -e \"require 'securerandom'; puts '**' << SecureRandom.hex[0..6]\""
+    set funcResult to do shell script "ruby -e \"require 'securerandom'; puts '#' << SecureRandom.hex[0..6]\""
   end if
 
   if funcResult is not null

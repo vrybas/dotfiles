@@ -22,7 +22,7 @@
         lpc = log -p -c
         lc = log
         lco = log --pretty=oneline --decorate
-        lx = log --graph --pretty=format:'%s - %Cred%h%Creset  %Cgreen(%cr)%Creset %an' --abbrev-commit --date=relative --all
+        lx = log --all --pretty=format:'%Cred%d %C(yellow)%h %Creset%s %Cgreen(%cr) %ci%Creset %an' --abbrev-commit --date=relative --author-date-order
         lst = log --stat
         ch = checkout
         pch = pcheckout

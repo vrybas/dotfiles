@@ -46,3 +46,9 @@ PERL_LOCAL_LIB_ROOT="/Users/vrybas/perl5${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LIB
 PERL_MB_OPT="--install_base \"/Users/vrybas/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/Users/vrybas/perl5"; export PERL_MM_OPT;
 export PATH="/usr/local/opt/qt5/bin:$PATH"
+export PATH="/Users/vrybas/Library/Python/3.6/bin:$PATH"
+export PATH="/Users/vrybas/.dotfiles/bin:$PATH"
+export PATH="/usr/local/opt/qt@5.5/bin:$PATH"
+
+eval "$(rbenv init -)"
+
