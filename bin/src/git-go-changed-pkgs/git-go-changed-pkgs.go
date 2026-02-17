@@ -39,6 +39,28 @@ var (
 	verbose    = flag.Bool("verbose", false, "Show detailed dependency information")
 )
 
+// Box drawing characters
+const (
+	boxHDouble    = "═"
+	boxVDouble    = "║"
+	boxCornerTL   = "╔"
+	boxCornerTR   = "╗"
+	boxCornerBL   = "╚"
+	boxCornerBR   = "╝"
+	boxHSingle    = "─"
+	boxVSingle    = "│"
+	boxCornerTLS  = "┌"
+	boxCornerTRS  = "┐"
+	boxCornerBLS  = "└"
+	boxCornerBRS  = "┘"
+	boxTeeRight   = "├"
+	boxTeeEnd     = "└"
+	arrowLeft     = "◀"
+)
+
+// Circled numbers for merge order markers
+var circledNumbers = []string{"①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩", "⑪", "⑫", "⑬", "⑭", "⑮"}
+
 func main() {
 	ctx := context.Background()
 	flag.Parse()
@@ -345,66 +367,225 @@ func topologicalSort(graph *DependencyGraph, changedPackages map[string]*Package
 	return mergeGroups, nil
 }
 
-// outputMergeOrder prints the merge order in a human-readable format
-func outputMergeOrder(currentBranch, baseBranch, modulePrefix string, groups []MergeGroup, graph *DependencyGraph, totalPackages int) {
-	fmt.Printf("Package Dependency Analysis for Branch: %s\n", currentBranch)
-	fmt.Printf("Base Branch: %s\n", baseBranch)
-	fmt.Printf("Changed Packages: %d\n\n", totalPackages)
+// repeatString repeats a string n times
+func repeatString(s string, n int) string {
+	if n <= 0 {
+		return ""
+	}
+	var builder strings.Builder
+	for i := 0; i < n; i++ {
+		builder.WriteString(s)
+	}
+	return builder.String()
+}
 
-	fmt.Println("=== Merge Order ===")
+// getCircledNumber returns a circled number marker for the given index (0-based)
+func getCircledNumber(idx int) string {
+	if idx < len(circledNumbers) {
+		return circledNumbers[idx]
+	}
+	return fmt.Sprintf("[%d]", idx+1)
+}
+
+// drawHeader draws a double-line box header
+func drawHeader(title string, width int) {
+	// Ensure minimum width
+	if width < len(title)+4 {
+		width = len(title) + 4
+	}
+	innerWidth := width - 2
+
+	fmt.Printf("%s%s%s\n", boxCornerTL, repeatString(boxHDouble, innerWidth), boxCornerTR)
+	// Pad title to center
+	padding := (innerWidth - len(title)) / 2
+	rightPadding := innerWidth - len(title) - padding
+//	fmt.Printf("%s%s%s%s%s\n", boxVDouble, repeatString(" ", padding), title, repeatString(" ", rightPadding), boxVDouble)
+	fmt.Printf("%s%s%s%s\n", boxVDouble, repeatString(" ", padding), title, repeatString(" ", rightPadding))
+	fmt.Printf("%s%s%s\n", boxCornerBL, repeatString(boxHDouble, innerWidth), boxCornerBR)
+}
+
+// drawSectionHeader draws a single-line section header
+func drawSectionHeader(title string) {
+	width := 65
+	innerWidth := width - 2
+
+	fmt.Printf("%s%s%s\n", boxCornerTLS, repeatString(boxHSingle, innerWidth), boxCornerTRS)
+	fmt.Printf("%s %s%s%s\n", boxVSingle, title, repeatString(" ", innerWidth-len(title)-1), boxVSingle)
+	fmt.Printf("%s%s%s\n", boxCornerBLS, repeatString(boxHSingle, innerWidth), boxCornerBRS)
+}
+
+// buildPackageNumberMap creates a map from package path to its merge order number
+func buildPackageNumberMap(groups []MergeGroup) map[string]int {
+	pkgNum := make(map[string]int)
+	num := 0
+	for _, group := range groups {
+		for _, pkg := range group.Packages {
+			pkgNum[pkg] = num
+			num++
+		}
+	}
+	return pkgNum
+}
+
+// renderDependencyTree renders the bottom-up dependency tree
+func renderDependencyTree(modulePrefix string, groups []MergeGroup, graph *DependencyGraph) {
+	drawSectionHeader("DEPENDENCY TREE (merge from top to bottom)")
 	fmt.Println()
 
-	for _, group := range groups {
-		if group.Level == 0 {
-			fmt.Printf("Level %d (No dependencies - can merge immediately):\n", group.Level)
-		} else {
-			fmt.Printf("Level %d (Depends on Level 0-%d):\n", group.Level, group.Level-1)
+	pkgNum := buildPackageNumberMap(groups)
+
+	// Track which packages have already been rendered as children
+	rendered := make(map[string]bool)
+
+	// Start with level 0 packages (no dependencies) as roots
+	if len(groups) == 0 {
+		return
+	}
+
+	// Render each root and its dependents
+	for _, rootPkg := range groups[0].Packages {
+		renderTreeNode(rootPkg, modulePrefix, graph, pkgNum, rendered, "", true, true)
+	}
+
+	fmt.Println()
+	fmt.Println("  Legend: Parent ← Child means \"Child depends on Parent\"")
+	fmt.Println()
+}
+
+// renderTreeNode recursively renders a node and its dependents
+func renderTreeNode(pkg, modulePrefix string, graph *DependencyGraph, pkgNum map[string]int, rendered map[string]bool, prefix string, isLast bool, isRoot bool) {
+	shortName := strings.TrimPrefix(pkg, modulePrefix+"/")
+	marker := getCircledNumber(pkgNum[pkg])
+
+	// Build the connection prefix
+	var connector string
+	if isRoot {
+		connector = "  "
+	} else if isLast {
+		connector = boxTeeEnd + boxHSingle + boxHSingle + " "
+	} else {
+		connector = boxTeeRight + boxHSingle + boxHSingle + " "
+	}
+
+	// Determine annotation
+	var annotation string
+	pkgInfo := graph.Packages[pkg]
+	if len(pkgInfo.Deps) == 0 {
+		annotation = fmt.Sprintf(" %s%s no dependencies", arrowLeft, boxHSingle)
+	} else {
+		depMarkers := make([]string, 0, len(pkgInfo.Deps))
+		for _, dep := range pkgInfo.Deps {
+			depMarkers = append(depMarkers, getCircledNumber(pkgNum[dep]))
 		}
+		sort.Strings(depMarkers)
+		annotation = fmt.Sprintf(" %s%s depends on %s", arrowLeft, boxHSingle, strings.Join(depMarkers, ""))
+	}
 
-		for _, pkg := range group.Packages {
-			pkgInfo := graph.Packages[pkg]
-			shortName := strings.TrimPrefix(pkg, modulePrefix+"/")
+	fmt.Printf("%s%s%s %s%s\n", prefix, connector, marker, shortName, annotation)
 
-			fmt.Printf("  - %s\n", shortName)
+	// Mark as rendered
+	rendered[pkg] = true
 
-			// Show dependencies
-			if len(pkgInfo.Deps) == 0 {
-				fmt.Println("    Dependencies: none (within changed packages)")
-			} else {
-				fmt.Println("    Dependencies:")
-				for _, dep := range pkgInfo.Deps {
-					shortDep := strings.TrimPrefix(dep, modulePrefix+"/")
-					fmt.Printf("      - %s\n", shortDep)
-				}
-			}
+	// Get dependents (packages that depend on this one)
+	dependents := append([]string{}, graph.AdjList[pkg]...)
+	sort.Strings(dependents)
 
-			// Show reverse dependencies (packages that depend on this one)
-			if len(graph.AdjList[pkg]) == 0 {
-				fmt.Println("    Depended on by: none")
-			} else {
-				fmt.Println("    Depended on by:")
-				dependents := append([]string{}, graph.AdjList[pkg]...)
-				sort.Strings(dependents)
-				for _, dependent := range dependents {
-					shortDep := strings.TrimPrefix(dependent, modulePrefix+"/")
-					fmt.Printf("      - %s\n", shortDep)
-				}
-			}
-
-			fmt.Println()
+	// Filter to only unrendered dependents to avoid duplication
+	var unrenderedDeps []string
+	for _, dep := range dependents {
+		if !rendered[dep] {
+			unrenderedDeps = append(unrenderedDeps, dep)
 		}
 	}
 
-	fmt.Println("=== Summary ===")
-	fmt.Printf("Total merge levels: %d\n", len(groups))
-	fmt.Println("Each level must be merged sequentially after previous levels")
-	fmt.Printf("To split this PR, create %d separate PRs in the order shown above\n", len(groups))
+	// Build new prefix for children
+	var childPrefix string
+	if isRoot {
+		childPrefix = prefix + "     "
+	} else if isLast {
+		childPrefix = prefix + "    "
+	} else {
+		childPrefix = prefix + boxVSingle + "   "
+	}
+
+	// Render children
+	for i, dep := range unrenderedDeps {
+		isLastChild := (i == len(unrenderedDeps)-1)
+		renderTreeNode(dep, modulePrefix, graph, pkgNum, rendered, childPrefix, isLastChild, false)
+	}
+}
+
+// renderMergeOrder renders the numbered merge order list
+func renderMergeOrder(modulePrefix string, groups []MergeGroup, graph *DependencyGraph) {
+	drawSectionHeader("MERGE ORDER")
+	fmt.Println()
+
+	pkgNum := buildPackageNumberMap(groups)
+	num := 0
+
+	for _, group := range groups {
+		for _, pkg := range group.Packages {
+			shortName := strings.TrimPrefix(pkg, modulePrefix+"/")
+			marker := getCircledNumber(num)
+			pkgInfo := graph.Packages[pkg]
+
+			var depInfo string
+			if len(pkgInfo.Deps) == 0 {
+				depInfo = "merge first (no deps)"
+			} else {
+				depMarkers := make([]string, 0, len(pkgInfo.Deps))
+				for _, dep := range pkgInfo.Deps {
+					depMarkers = append(depMarkers, getCircledNumber(pkgNum[dep]))
+				}
+				sort.Strings(depMarkers)
+				depInfo = fmt.Sprintf("after %s", strings.Join(depMarkers, ""))
+			}
+
+			// Calculate padding for alignment
+			maxNameLen := 35
+			padLen := maxNameLen - len(shortName)
+			if padLen < 2 {
+				padLen = 2
+			}
+
+			fmt.Printf("  %s %s%s%s\n", marker, shortName, repeatString(" ", padLen), depInfo)
+			num++
+		}
+	}
+	fmt.Println()
+}
+
+// outputMergeOrder prints the merge order in a human-readable format with ASCII art
+func outputMergeOrder(currentBranch, baseBranch, modulePrefix string, groups []MergeGroup, graph *DependencyGraph, totalPackages int) {
+	// Header banner
+	title := fmt.Sprintf("Package Dependencies: %s → %s", currentBranch, baseBranch)
+	subtitle := fmt.Sprintf("Changed: %d packages · %d merge levels", totalPackages, len(groups))
+	headerWidth := 68
+
+	fmt.Println()
+	drawHeader(title, headerWidth)
+
+	// Subtitle line
+	subtitlePad := (headerWidth - len(subtitle) - 2) / 2
+	fmt.Printf("%s%s\n\n", repeatString(" ", subtitlePad), subtitle)
+
+	// Dependency tree visualization
+	// renderDependencyTree(modulePrefix, groups, graph)
+
+	// Numbered merge order
+	renderMergeOrder(modulePrefix, groups, graph)
+
+	// Summary
+	fmt.Printf("  To split this PR, create %d separate PRs in the order above.\n", len(groups))
+	fmt.Println()
 
 	if *verbose {
-		fmt.Println("\n=== Verbose Details ===")
-		fmt.Printf("Module prefix: %s\n", modulePrefix)
-		fmt.Printf("Total packages in graph: %d\n", len(graph.Packages))
-		fmt.Printf("Total dependency edges: %d\n", countEdges(graph))
+		drawSectionHeader("VERBOSE DETAILS")
+		fmt.Println()
+		fmt.Printf("  Module prefix: %s\n", modulePrefix)
+		fmt.Printf("  Total packages in graph: %d\n", len(graph.Packages))
+		fmt.Printf("  Total dependency edges: %d\n", countEdges(graph))
+		fmt.Println()
 	}
 }
 
