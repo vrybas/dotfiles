@@ -83,3 +83,5 @@
 	token = 72fa95cbc86196f9402d283b05aa2eb93821f27b
 [todo]
 	md = /Users/vrybas/.gitignore_global
+[url "git@github.com:"]
+	insteadOf = https://github.com/

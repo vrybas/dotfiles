@@ -1,29 +1,29 @@
 windows:
-- name: ed
-  panes:
-    - commands: ["clear"]
-- name: spec
-  panes:
-    - commands: ["clear"]
-- name: cons
+- name: maint
   panes:
     - commands: ["clear"]
 - name: serv
   panes:
     - commands: ["clear"]
-- name: git
+- name: test
+  panes:
+    - commands: ["clear"]
+- name: repl
+  panes:
+    - commands: ["clear"]
+- name: scm
   layout: even-horizontal
   panes:
     - commands: ["clear","git fetch","git-wtf"]
 - name: deploy
   panes:
     - commands: ["clear"]
-- name: mtce
+- name: sh1
   panes:
     - commands: ["clear","tmux select-window -t :1"]
-- name: sh
+- name: sh2
   panes:
     - commands: ["clear","tmux select-window -t :1"]
-- name: sh
+- name: sh3
   panes:
     - commands: ["clear","tmux select-window -t :1"]
