@@ -79,7 +79,7 @@ func run(ctx context.Context) error {
 	}
 
 	if len(changedPkgDirs) == 0 {
-		fmt.Println("No Go files changed on this branch")
+		fmt.Println("No Go files changed (committed, staged, or untracked)")
 		return nil
 	}
 
@@ -143,46 +143,54 @@ func getModulePrefix(ctx context.Context) (string, error) {
 	return strings.TrimSpace(output), nil
 }
 
-// findChangedPackages finds all packages that have .go files changed
-func findChangedPackages(ctx context.Context, baseBranch string) ([]string, error) {
-	// Get list of changed files
-	output, err := execCommand(ctx, "git", "diff", "--name-only", baseBranch+"...HEAD")
-	if err != nil {
-		return nil, fmt.Errorf("git diff failed: %w", err)
-	}
-
-	// Filter to .go files and extract unique package directories
-	pkgDirs := make(map[string]bool)
+// addGoFilesToPkgDirs parses git command output and adds .go file directories to pkgDirs
+func addGoFilesToPkgDirs(output string, pkgDirs map[string]bool) {
 	lines := strings.Split(strings.TrimSpace(output), "\n")
-
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
-		if line == "" {
+		if line == "" || !strings.HasSuffix(line, ".go") {
 			continue
 		}
-
-		// Only consider .go files (not _test.go to avoid test-only packages)
-		if !strings.HasSuffix(line, ".go") {
-			continue
-		}
-
-		// Get directory of the file
 		dir := filepath.Dir(line)
 		if dir == "." {
 			dir = "./"
 		} else {
 			dir = "./" + dir
 		}
-
 		pkgDirs[dir] = true
 	}
+}
 
-	// Convert map to slice
+// findChangedPackages finds all packages that have .go files changed (committed, staged, or untracked)
+func findChangedPackages(ctx context.Context, baseBranch string) ([]string, error) {
+	pkgDirs := make(map[string]bool)
+
+	// 1. Get committed changes (branch vs base)
+	output, err := execCommand(ctx, "git", "diff", "--name-only", baseBranch+"...HEAD")
+	if err != nil {
+		return nil, fmt.Errorf("git diff committed failed: %w", err)
+	}
+	addGoFilesToPkgDirs(output, pkgDirs)
+
+	// 2. Get staged changes (not yet committed)
+	output, err = execCommand(ctx, "git", "diff", "--name-only", "--cached")
+	if err != nil {
+		return nil, fmt.Errorf("git diff staged failed: %w", err)
+	}
+	addGoFilesToPkgDirs(output, pkgDirs)
+
+	// 3. Get untracked files
+	output, err = execCommand(ctx, "git", "ls-files", "--others", "--exclude-standard")
+	if err != nil {
+		return nil, fmt.Errorf("git ls-files failed: %w", err)
+	}
+	addGoFilesToPkgDirs(output, pkgDirs)
+
+	// Convert map to sorted slice
 	result := make([]string, 0, len(pkgDirs))
 	for dir := range pkgDirs {
 		result = append(result, dir)
 	}
-
 	sort.Strings(result)
 	return result, nil
 }
