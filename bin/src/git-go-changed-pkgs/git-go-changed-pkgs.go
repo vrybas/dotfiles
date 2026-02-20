@@ -188,9 +188,9 @@ func findChangedPackages(ctx context.Context, baseBranch string) ([]string, erro
 	pkgDirs := make(map[string]bool)
 
 	// 1. Get committed changes (branch vs base)
-	output, err := execCommand(ctx, "git", "diff", "--name-only", baseBranch+"...HEAD")
+	output, err := execCommand(ctx, "git", "log", "--first-parent", "--no-merges", "--format=", "--name-only", baseBranch+"..HEAD")
 	if err != nil {
-		return nil, fmt.Errorf("git diff committed failed: %w", err)
+		return nil, fmt.Errorf("git log committed failed: %w", err)
 	}
 	addGoFilesToPkgDirs(output, pkgDirs)
 
