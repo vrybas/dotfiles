@@ -19,6 +19,15 @@ type PackageInfo struct {
 	Deps       []string // Import paths of dependencies (module-internal only)
 	Imports    []string // All imports from go list
 	Changed    bool     // Whether this package has changes
+	Files      []string // List of file paths in this package
+}
+
+// CollectedFiles tracks all changed files categorized by type
+type CollectedFiles struct {
+	AllFiles        []string            // All changed files from git
+	GoFilesByDir    map[string][]string // map[dir][]goFilePaths
+	NonGoFilesByDir map[string][]string // map[dir][]nonGoFilePaths
+	RootFiles       []string            // Files at repository root (Makefile, etc.)
 }
 
 // DependencyGraph represents the dependency relationships between packages
@@ -95,7 +104,7 @@ func run(ctx context.Context) error {
 	}
 
 	// 5. Find changed packages
-	changedPkgDirs, err := findChangedPackages(ctx, *baseBranch)
+	changedPkgDirs, collected, err := findChangedPackages(ctx, *baseBranch)
 	if err != nil {
 		return fmt.Errorf("failed to find changed packages: %w", err)
 	}
@@ -106,7 +115,7 @@ func run(ctx context.Context) error {
 	}
 
 	// 6. Discover package information
-	packages, err := discoverPackages(ctx, changedPkgDirs)
+	packages, err := discoverPackages(ctx, changedPkgDirs, collected)
 	if err != nil {
 		return fmt.Errorf("failed to discover packages: %w", err)
 	}
@@ -123,8 +132,16 @@ func run(ctx context.Context) error {
 		return fmt.Errorf("topological sort failed: %w", err)
 	}
 
-	// 9. Output merge order
-	outputMergeOrder(currentBranch, *baseBranch, modulePrefix, mergeGroups, graph, len(packages))
+	// 9. Identify non-package files
+	nonPackageFiles := identifyNonPackageFiles(collected, packages)
+
+	// 10. Verify file accounting
+	if err := verifyFileAccounting(collected, packages, nonPackageFiles); err != nil {
+		return fmt.Errorf("file accounting failed: %w", err)
+	}
+
+	// 11. Output merge order
+	outputMergeOrder(currentBranch, *baseBranch, modulePrefix, mergeGroups, graph, len(packages), nonPackageFiles)
 
 	return nil
 }
@@ -165,48 +182,78 @@ func getModulePrefix(ctx context.Context) (string, error) {
 	return strings.TrimSpace(output), nil
 }
 
-// addGoFilesToPkgDirs parses git command output and adds .go file directories to pkgDirs
-func addGoFilesToPkgDirs(output string, pkgDirs map[string]bool) {
+// collectAllChangedFiles parses git command output and categorizes all changed files
+func collectAllChangedFiles(output string, collected *CollectedFiles, seen map[string]bool) {
 	lines := strings.Split(strings.TrimSpace(output), "\n")
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
-		if line == "" || !strings.HasSuffix(line, ".go") {
+		if line == "" {
 			continue
 		}
-		dir := filepath.Dir(line)
-		if dir == "." {
-			dir = "./"
-		} else {
-			dir = "./" + dir
+
+		// Skip if already seen (deduplicate across git commands)
+		if seen[line] {
+			continue
 		}
-		pkgDirs[dir] = true
+		seen[line] = true
+
+		// Track all files
+		collected.AllFiles = append(collected.AllFiles, line)
+
+		dir := filepath.Dir(line)
+		isGoFile := strings.HasSuffix(line, ".go")
+
+		// Categorize by location and type
+		if dir == "." {
+			// Root-level file
+			collected.RootFiles = append(collected.RootFiles, line)
+		} else {
+			normalizedDir := "./" + dir
+			if isGoFile {
+				collected.GoFilesByDir[normalizedDir] = append(collected.GoFilesByDir[normalizedDir], line)
+			} else {
+				collected.NonGoFilesByDir[normalizedDir] = append(collected.NonGoFilesByDir[normalizedDir], line)
+			}
+		}
 	}
 }
 
 // findChangedPackages finds all packages that have .go files changed (committed, staged, or untracked)
-func findChangedPackages(ctx context.Context, baseBranch string) ([]string, error) {
-	pkgDirs := make(map[string]bool)
+func findChangedPackages(ctx context.Context, baseBranch string) ([]string, *CollectedFiles, error) {
+	collected := &CollectedFiles{
+		AllFiles:        []string{},
+		GoFilesByDir:    make(map[string][]string),
+		NonGoFilesByDir: make(map[string][]string),
+		RootFiles:       []string{},
+	}
+	seen := make(map[string]bool) // Track files across multiple git commands
 
 	// 1. Get committed changes (branch vs base)
 	output, err := execCommand(ctx, "git", "log", "--first-parent", "--no-merges", "--format=", "--name-only", baseBranch+"..HEAD")
 	if err != nil {
-		return nil, fmt.Errorf("git log committed failed: %w", err)
+		return nil, nil, fmt.Errorf("git log committed failed: %w", err)
 	}
-	addGoFilesToPkgDirs(output, pkgDirs)
+	collectAllChangedFiles(output, collected, seen)
 
 	// 2. Get staged changes (not yet committed)
 	output, err = execCommand(ctx, "git", "diff", "--name-only", "--cached")
 	if err != nil {
-		return nil, fmt.Errorf("git diff staged failed: %w", err)
+		return nil, nil, fmt.Errorf("git diff staged failed: %w", err)
 	}
-	addGoFilesToPkgDirs(output, pkgDirs)
+	collectAllChangedFiles(output, collected, seen)
 
 	// 3. Get untracked files
 	output, err = execCommand(ctx, "git", "ls-files", "--others", "--exclude-standard")
 	if err != nil {
-		return nil, fmt.Errorf("git ls-files failed: %w", err)
+		return nil, nil, fmt.Errorf("git ls-files failed: %w", err)
 	}
-	addGoFilesToPkgDirs(output, pkgDirs)
+	collectAllChangedFiles(output, collected, seen)
+
+	// Extract package directories from Go files
+	pkgDirs := make(map[string]bool)
+	for dir := range collected.GoFilesByDir {
+		pkgDirs[dir] = true
+	}
 
 	// Convert map to sorted slice
 	result := make([]string, 0, len(pkgDirs))
@@ -214,11 +261,11 @@ func findChangedPackages(ctx context.Context, baseBranch string) ([]string, erro
 		result = append(result, dir)
 	}
 	sort.Strings(result)
-	return result, nil
+	return result, collected, nil
 }
 
 // discoverPackages analyzes the given package directories and returns package information
-func discoverPackages(ctx context.Context, pkgDirs []string) (map[string]*PackageInfo, error) {
+func discoverPackages(ctx context.Context, pkgDirs []string, collected *CollectedFiles) (map[string]*PackageInfo, error) {
 	packages := make(map[string]*PackageInfo)
 
 	for _, dir := range pkgDirs {
@@ -241,10 +288,77 @@ func discoverPackages(ctx context.Context, pkgDirs []string) (map[string]*Packag
 		// Take the first (and should be only) package
 		pkg := pkgInfos[0]
 		pkg.Changed = true
+		pkg.Files = []string{}
+
+		// Add Go files from this directory
+		if goFiles, exists := collected.GoFilesByDir[dir]; exists {
+			pkg.Files = append(pkg.Files, goFiles...)
+		}
+
+		// Add non-Go files from this directory
+		if nonGoFiles, exists := collected.NonGoFilesByDir[dir]; exists {
+			pkg.Files = append(pkg.Files, nonGoFiles...)
+		}
+
+		sort.Strings(pkg.Files) // For consistent output
 		packages[pkg.ImportPath] = pkg
 	}
 
 	return packages, nil
+}
+
+// identifyNonPackageFiles finds files that don't belong to any Go package
+func identifyNonPackageFiles(collected *CollectedFiles, packages map[string]*PackageInfo) []string {
+	// Build set of all directories with packages
+	pkgDirs := make(map[string]bool)
+	for _, pkg := range packages {
+		normalizedDir := "./" + strings.TrimPrefix(pkg.Dir, "./")
+		pkgDirs[normalizedDir] = true
+	}
+
+	nonPackageFiles := []string{}
+
+	// Add root files (already don't belong to packages)
+	nonPackageFiles = append(nonPackageFiles, collected.RootFiles...)
+
+	// Check non-Go files in non-package directories
+	for dir, files := range collected.NonGoFilesByDir {
+		if !pkgDirs[dir] {
+			nonPackageFiles = append(nonPackageFiles, files...)
+		}
+	}
+
+	sort.Strings(nonPackageFiles)
+	return nonPackageFiles
+}
+
+// verifyFileAccounting ensures all files appear exactly once in the output
+func verifyFileAccounting(collected *CollectedFiles, packages map[string]*PackageInfo, nonPackageFiles []string) error {
+	seenFiles := make(map[string]int)
+
+	// Count files in packages
+	for _, pkg := range packages {
+		for _, file := range pkg.Files {
+			seenFiles[file]++
+		}
+	}
+
+	// Count non-package files
+	for _, file := range nonPackageFiles {
+		seenFiles[file]++
+	}
+
+	// Verify each collected file appears exactly once
+	for _, file := range collected.AllFiles {
+		if seenFiles[file] == 0 {
+			return fmt.Errorf("MISSING: %s not in output", file)
+		}
+		if seenFiles[file] > 1 {
+			return fmt.Errorf("DUPLICATE: %s appears %d times", file, seenFiles[file])
+		}
+	}
+
+	return nil
 }
 
 // buildDependencyGraph builds a dependency graph for the changed packages
@@ -549,6 +663,20 @@ func renderMergeOrder(modulePrefix string, groups []MergeGroup, graph *Dependenc
 			}
 
 			fmt.Printf("  %s %s%s%s\n", marker, shortName, repeatString(" ", padLen), depInfo)
+
+			// Print files for this package
+			if len(pkgInfo.Files) > 0 {
+				for i, file := range pkgInfo.Files {
+					isLast := (i == len(pkgInfo.Files)-1)
+					bullet := "├─"
+					if isLast {
+						bullet = "└─"
+					}
+					fmt.Printf("     %s %s\n", bullet, file)
+				}
+				fmt.Println() // Blank line between packages
+			}
+
 			num++
 		}
 	}
@@ -556,7 +684,7 @@ func renderMergeOrder(modulePrefix string, groups []MergeGroup, graph *Dependenc
 }
 
 // outputMergeOrder prints the merge order in a human-readable format with ASCII art
-func outputMergeOrder(currentBranch, baseBranch, modulePrefix string, groups []MergeGroup, graph *DependencyGraph, totalPackages int) {
+func outputMergeOrder(currentBranch, baseBranch, modulePrefix string, groups []MergeGroup, graph *DependencyGraph, totalPackages int, nonPackageFiles []string) {
 	// Header banner
 	title := fmt.Sprintf("Package Dependencies: %s → %s", currentBranch, baseBranch)
 	subtitle := fmt.Sprintf("Changed: %d packages · %d merge levels", totalPackages, len(groups))
@@ -574,6 +702,22 @@ func outputMergeOrder(currentBranch, baseBranch, modulePrefix string, groups []M
 
 	// Numbered merge order
 	renderMergeOrder(modulePrefix, groups, graph)
+
+	// Non-package files section
+	if len(nonPackageFiles) > 0 {
+		drawSectionHeader("NON-PACKAGE FILES (include in final PR)")
+		fmt.Println()
+
+		for i, file := range nonPackageFiles {
+			isLast := (i == len(nonPackageFiles)-1)
+			bullet := "├─"
+			if isLast {
+				bullet = "└─"
+			}
+			fmt.Printf("  %s %s\n", bullet, file)
+		}
+		fmt.Println()
+	}
 
 	// Summary
 	fmt.Printf("  To split this PR, create %d separate PRs in the order above.\n", len(groups))
