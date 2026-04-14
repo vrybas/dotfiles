@@ -1,0 +1,36 @@
+#!/bin/sh
+
+if [ "$#" -eq 0 ]; then
+  echo "usage: log <commit message>" >&2
+  exit 64
+fi
+
+message=$1
+shift
+
+for arg in "$@"; do
+  message="$message $arg"
+done
+
+output_file=$(mktemp "${TMPDIR:-/tmp}/log.XXXXXX") || exit 1
+trap 'rm -f "$output_file"' EXIT HUP INT TERM
+
+if ! git -C "$HOME/log" commit --allow-empty -m "$message" >"$output_file" 2>&1; then
+  cat "$output_file" >&2
+  exit 1
+fi
+
+if ! random_byte=$(od -An -N1 -tu1 /dev/urandom 2>"$output_file"); then
+  cat "$output_file" >&2
+  exit 1
+fi
+
+set -- $random_byte
+random_byte=$1
+
+if [ "$random_byte" -lt 64 ]; then
+  if ! git -C "$HOME/log" push >"$output_file" 2>&1; then
+    cat "$output_file" >&2
+    exit 1
+  fi
+fi
