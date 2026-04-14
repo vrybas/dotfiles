@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-	"sync"
+	"time"
 )
 
 //go:embed overlay.js
@@ -22,6 +22,7 @@ Usage:
 Options:
   --color <color>     Background color: red, blue, yellow, green, purple, orange (default: blue)
   --duration <secs>   How long to show the notification in seconds (default: 4)
+  --speech-lead-ms    Delay before showing overlay after speech starts (default: 1000)
   --no-say            Skip text-to-speech
   --help              Show this help
 
@@ -42,6 +43,7 @@ func main() {
 
 	color := "blue"
 	duration := 4.0
+	speechLeadMs := 1000
 	say := true
 	var message string
 
@@ -66,6 +68,19 @@ func main() {
 				fatal("invalid duration: %s", args[i])
 			}
 			duration = d
+		case "--speech-lead-ms":
+			if i+1 >= len(args) {
+				fatal("--speech-lead-ms requires a value")
+			}
+			i++
+			d, err := strconv.Atoi(args[i])
+			if err != nil {
+				fatal("invalid speech lead ms: %s", args[i])
+			}
+			if d < 0 {
+				fatal("speech lead ms must be >= 0")
+			}
+			speechLeadMs = d
 		case "--no-say":
 			say = false
 		default:
@@ -103,34 +118,30 @@ func main() {
 		fatal("failed to write overlay script: %v", err)
 	}
 
-	var wg sync.WaitGroup
-
-	// Run overlay
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		cmd := exec.Command("osascript", "-l", "JavaScript", jsPath,
-			message, color, "0", fmt.Sprintf("%.1f", duration))
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		if err := cmd.Run(); err != nil {
-			fmt.Fprintf(os.Stderr, "overlay error: %v\n", err)
-		}
-	}()
-
-	// Run say
+	var sayCmd *exec.Cmd
 	if say {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			cmd := exec.Command("say", message)
-			if err := cmd.Run(); err != nil {
-				fmt.Fprintf(os.Stderr, "say error: %v\n", err)
-			}
-		}()
+		sayCmd = exec.Command("say", message)
+		if err := sayCmd.Start(); err != nil {
+			fmt.Fprintf(os.Stderr, "say error: %v\n", err)
+			sayCmd = nil
+		} else if speechLeadMs > 0 {
+			time.Sleep(time.Duration(speechLeadMs) * time.Millisecond)
+		}
 	}
 
-	wg.Wait()
+	overlayCmd := exec.Command("osascript", "-l", "JavaScript", jsPath,
+		message, color, "0", fmt.Sprintf("%.1f", duration))
+	overlayCmd.Stdout = os.Stdout
+	overlayCmd.Stderr = os.Stderr
+	if err := overlayCmd.Run(); err != nil {
+		fmt.Fprintf(os.Stderr, "overlay error: %v\n", err)
+	}
+
+	if sayCmd != nil {
+		if err := sayCmd.Wait(); err != nil {
+			fmt.Fprintf(os.Stderr, "say error: %v\n", err)
+		}
+	}
 }
 
 func fatal(format string, args ...any) {
