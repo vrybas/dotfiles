@@ -12,10 +12,23 @@ for arg in "$@"; do
   message="$message $arg"
 done
 
+main_ts=$(date '+%Y-%m-%d %H:%M:%S')
+display_ts=$(date '+%H:%M')
+
+mkdir -p "$HOME/log"
+
+printf '[%s] %s\n' "$main_ts" "$message" >> "$HOME/log/main.log"
+printf '[%s] %s 📟\n' "$display_ts" "$message" >> "$HOME/log/display.log"
+
 output_file=$(mktemp "${TMPDIR:-/tmp}/log.XXXXXX") || exit 1
 trap 'rm -f "$output_file"' EXIT HUP INT TERM
 
-if ! git -C "$HOME/log" commit --allow-empty -m "$message" >"$output_file" 2>&1; then
+if ! git -C "$HOME/log" add main.log display.log >"$output_file" 2>&1; then
+  cat "$output_file" >&2
+  exit 1
+fi
+
+if ! git -C "$HOME/log" commit -m "$message" >"$output_file" 2>&1; then
   cat "$output_file" >&2
   exit 1
 fi
